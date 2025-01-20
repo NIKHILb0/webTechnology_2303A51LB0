@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registration Form</title>
+  <style>
+    body {
+      background-color: gray;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      width: 80%;
+      max-width: 600px;
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: rgb(0, 0, 0);
+    }
+    pre {
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Registration Form</h1>
+    <div ng-app="myApp" ng-init="" ng-controller="myCtrl">
+      <pre>
+      Name       : <input type="text" ng-model="name">  {{name}}<br/> 
+      Branch     : <input type="text" ng-model="branch">  {{branch}}<br/> 
+      College    : <input type="text" ng-model="college">  {{college}}<br/> 
+      Mobile No  : <input type="text" maxlength="10" ng-model="phoneno">  {{phoneno}}<br/> 
+      Email id   : <input type="email" ng-model="mailid">  {{mailid}}<br/> 
+      Password   : <input type="password" ng-model="pwd">  {{pwd}}<br/> 
+      </pre>
+      <div><center>
+        <button ng-click="print()" style="background-color:rgb(72, 178, 178);">Submit</button><br>
+        <!-- <h2>{{message}}</h2> --></center>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <script>
+    var app = angular.module('myApp', []);
+    app.controller('myCtrl', function($scope) {
+      $scope.name = "";
+      $scope.branch = "CSE";
+      $scope.college = "SRU";
+      $scope.phoneno = "";
+      $scope.mailid = "@gmail.com";
+      $scope.pwd = "";
+
+      $scope.print = function() {
+        alert("Form Submitted Successfully!!");
+      }
+    });
+  </script>
+</body>
+</html>
