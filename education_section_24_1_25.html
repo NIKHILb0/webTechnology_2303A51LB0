@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="registrationApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Education Section</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Full viewport height */
+            background-color: #f4f4f4;
+        }
+        .form-container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        select, input, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body ng-controller="RegistrationController">
+
+    <div class="form-container">
+        <h1>--- Registration form ---</h1>
+        <h2>Education Section</h2><br>
+        <form ng-submit="submitForm()">
+            <!-- Dropdown for Education Level -->
+            <label for="educationLevel">Education Level:</label>
+            <select id="educationLevel" ng-model="user.educationLevel" ng-change="clearFields()" required>
+                <option value="" disabled selected>Select Education Level</option>
+                <option value="btech">B.Tech</option>
+                <option value="degree">Degree</option>
+                <option value="phd">PhD</option>
+            </select>
+
+            <!-- Dropdown for B.Tech Stream -->
+            <div ng-if="user.educationLevel === 'btech'">
+                <label for="btechStream">B.Tech Stream:</label>
+                <select id="btechStream" ng-model="user.btechStream" required>
+                    <option value="" disabled selected>Select B.Tech Stream</option>
+                    <option value="cse">Computer Science</option>
+                    <option value="ece">Electronics and Communication</option>
+                    <option value="eee">Electrical and Electronics</option>
+                    <option value="mech">Mechanical</option>
+                    <option value="civil">Civil</option>
+                </select>
+            </div>
+
+            <!-- Input for Degree Field -->
+            <div ng-if="user.educationLevel === 'degree'">
+                <label for="degreeField">Degree Field:</label>
+                <input type="text" id="degreeField" ng-model="user.degreeField" placeholder="Enter Degree Field">
+            </div>
+
+            <!-- Input for PhD Topic -->
+            <div ng-if="user.educationLevel === 'phd'">
+                <label for="phdTopic">PhD Topic:</label>
+                <input type="text" id="phdTopic" ng-model="user.phdTopic" placeholder="Enter PhD Topic">
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit">Submit</button>
+        </form>
+
+        <pre>{{ user | json }}</pre>
+    </div>
+
+    <script>
+        angular.module('registrationApp', [])
+            .controller('RegistrationController', ['$scope', function ($scope) {
+                $scope.user = {};
+
+                // Clear fields when changing education level
+                $scope.clearFields = function () {
+                    $scope.user.btechStream = '';
+                    $scope.user.degreeField = '';
+                    $scope.user.phdTopic = '';
+                };
+
+                // Submit form and handle empty fields
+                $scope.submitForm = function () {
+                    if (!$scope.user.btechStream) $scope.user.btechStream = "None";
+                    if (!$scope.user.degreeField) $scope.user.degreeField = "None";
+                    if (!$scope.user.phdTopic) $scope.user.phdTopic = "None";
+
+                    alert('Form Submitted: ' + JSON.stringify($scope.user));
+                };
+            }]);
+    </script>
+
+</body>
+</html>
