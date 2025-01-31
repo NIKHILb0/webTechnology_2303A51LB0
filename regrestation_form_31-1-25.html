@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Registration Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            padding: 100px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-size: 16px;
+        }
+
+        .gender-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .gender-container label {
+            font-weight: normal;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Registration Form</h2>
+        <form id="registrationForm">
+            <h1>-------------------</h1>
+            <h1>Registration Form</h1>
+            <label for="fullName">Full Name:</label>
+            <input type="text" id="fullName" name="fullName" required>
+            <span class="error" id="fullNameError"></span>
+
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <span class="error" id="usernameError"></span>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            <span class="error" id="emailError"></span>
+
+            <label for="phone">Phone Number:</label>
+            <input type="text" id="phone" name="phone" required>
+            <span class="error" id="phoneError"></span>
+
+            <label>Gender:</label>
+            <div class="gender-container">
+                <label><input type="radio" name="gender" value="Male" required> Male</label>
+                <label><input type="radio" name="gender" value="Female" required> Female</label>
+                <label><input type="radio" name="gender" value="Other" required> Other</label>
+            </div>
+            <span class="error" id="genderError"></span>
+
+            <label for="dob">Date of Birth:</label>
+            <input type="date" id="dob" name="dob" required>
+            <span class="error" id="dobError"></span>
+
+            <label for="country">Country:</label>
+            <select id="country" name="country" required>
+                <option value="">Select Country</option>
+                <option value="India">India</option>
+                <option value="USA">USA</option>
+                <option value="UK">UK</option>
+                <option value="Canada">Canada</option>
+            </select>
+            <span class="error" id="countryError"></span>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <span class="error" id="passwordError"></span>
+
+            <label for="confirmPassword">Confirm Password:</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" required>
+            <span class="error" id="confirmPasswordError"></span>
+
+            <label>
+                <input type="checkbox" id="terms" required> I accept the Terms & Conditions
+            </label>
+            <span class="error" id="termsError"></span>
+
+            <button type="submit">Register</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("registrationForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            let isValid = true;
+
+            // Clear previous error messages
+            document.querySelectorAll(".error").forEach(el => el.innerText = "");
+
+            let fullName = document.getElementById("fullName").value.trim();
+            let username = document.getElementById("username").value.trim();
+            let email = document.getElementById("email").value.trim();
+            let phone = document.getElementById("phone").value.trim();
+            let gender = document.querySelector('input[name="gender"]:checked');
+            let dob = document.getElementById("dob").value;
+            let country = document.getElementById("country").value;
+            let password = document.getElementById("password").value;
+            let confirmPassword = document.getElementById("confirmPassword").value;
+            let terms = document.getElementById("terms").checked;
+
+            // Full name validation
+            if (fullName === "") {
+                document.getElementById("fullNameError").innerText = "Full name is required.";
+                isValid = false;
+            }
+
+            // Username validation
+            if (username.length < 4) {
+                document.getElementById("usernameError").innerText = "Username must be at least 4 characters.";
+                isValid = false;
+            }
+
+            // Email validation
+            if (!validateEmail(email)) {
+                document.getElementById("emailError").innerText = "Invalid email format.";
+                isValid = false;
+            }
+
+            // Phone validation
+            if (!/^\d{10}$/.test(phone)) {
+                document.getElementById("phoneError").innerText = "Enter a valid 10-digit phone number.";
+                isValid = false;
+            }
+
+            // Gender validation
+            if (!gender) {
+                document.getElementById("genderError").innerText = "Please select a gender.";
+                isValid = false;
+            }
+
+            // DOB validation
+            if (dob === "") {
+                document.getElementById("dobError").innerText = "Please enter your date of birth.";
+                isValid = false;
+            }
+
+            // Country validation
+            if (country === "") {
+                document.getElementById("countryError").innerText = "Please select a country.";
+                isValid = false;
+            }
+
+            // Password validation
+            if (password.length < 6) {
+                document.getElementById("passwordError").innerText = "Password must be at least 6 characters.";
+                isValid = false;
+            }
+
+            // Confirm password validation
+            if (password !== confirmPassword) {
+                document.getElementById("confirmPasswordError").innerText = "Passwords do not match.";
+                isValid = false;
+            }
+
+            // Terms validation
+            if (!terms) {
+                document.getElementById("termsError").innerText = "You must accept the Terms & Conditions.";
+                isValid = false;
+            }
+
+            if (isValid) {
+                submitForm(fullName, username, email, phone, gender.value, dob, country, password);
+            }
+        });
+
+        function validateEmail(email) {
+            let re = /\S+@\S+\.\S+/;
+            return re.test(email);
+        }
+
+        function submitForm(fullName, username, email, phone, gender, dob, country, password) {
+            alert("Registration Successful!");
+        }
+    </script>
+
+</body>
+</html>
