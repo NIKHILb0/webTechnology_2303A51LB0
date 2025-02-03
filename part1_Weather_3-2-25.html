@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="WeatherApp">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather Dashboard</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: url('https://images.pexels.com/photos/186980/pexels-photo-186980.jpeg?cs=srgb&dl=pexels-tahir-shaw-50609-186980.jpg&fm=jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #333;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 15px;
+      text-align: center;
+    }
+
+    .navbar-left {
+      color: white;
+      font-size: 20px;
+      font-weight: bold;
+      margin-left: 20px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 20px;
+      font-size: 18px;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 36px;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    input[type="text"] {
+      width: 80%;
+      padding: 10px;
+      font-size: 16px;
+      margin-right: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    button {
+      padding: 10px 15px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .weather-card {
+      background-color: #f9f9f9;
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .weather-card h2 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .weather-card p {
+      font-size: 18px;
+      margin: 5px 0;
+    }
+
+    .favorite-cities {
+      margin-top: 40px;
+    }
+
+    .favorite-cities h2 {
+      font-size: 24px;
+      color: #333;
+    }
+
+    .favorite-cities ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .favorite-cities li {
+      background-color: #f1f1f1;
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .favorite-cities button {
+      background-color: #ff5722;
+      font-size: 14px;
+    }
+
+    .favorite-cities button:hover {
+      background-color: #e64a19;
+    }
+
+    .error-message {
+      color: red;
+      font-size: 16px;
+      text-align: center;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="navbar-left">
+      <span>Nikhil K</span>
+    </div>
+    <a href="#!/weather">Weather Dashboard</a>
+    <a href="#!/">Home</a>
+    
+  </nav>
+
+  <div class="container" ng-view></div>
+
+  <script>
+    angular.module('WeatherApp', ['ngRoute'])
+      .config(['$routeProvider', function($routeProvider) {
+        $routeProvider
+          .when('/', {
+            template: '<h1>Welcome to the Weather Dashboard</h1>'
+          })
+          .when('/weather', {
+            template: `
+              <div ng-controller="WeatherController as weatherCtrl">
+                <h1>Weather Dashboard</h1>
+                <div>
+                  <input type="text" ng-model="weatherCtrl.city" placeholder="Enter city name">
+                  <button ng-click="weatherCtrl.getWeather()">Get Weather</button>
+                </div>
+
+                <div ng-if="weatherCtrl.weatherData" class="weather-card">
+                  <h2>{{ weatherCtrl.weatherData.name }}</h2>
+                  <p>Temperature: {{ weatherCtrl.weatherData.main.temp }}°C</p>
+                  <p>Humidity: {{ weatherCtrl.weatherData.main.humidity }}%</p>
+                  <p>Conditions: {{ weatherCtrl.weatherData.weather[0].description }}</p>
+                </div>
+
+                <div ng-if="weatherCtrl.error" class="error-message">
+                  <p>{{ weatherCtrl.error }}</p>
+                </div>
+
+                <div class="favorite-cities" ng-if="weatherCtrl.favoriteCities.length > 0">
+                  <h2>Favorite Cities</h2>
+                  <ul>
+                    <li ng-repeat="city in weatherCtrl.favoriteCities | orderBy">
+                      <span>{{ city }}</span>
+                      <button ng-click="weatherCtrl.getWeather(city)">Get Weather</button>
+                      <button ng-click="weatherCtrl.removeFromFavorites(city)">Remove</button>
+                    </li>
+                  </ul>
+                </div>
+
+                <div ng-if="!weatherCtrl.favoriteCities.includes(weatherCtrl.city)">
+                  <button ng-click="weatherCtrl.addToFavorites()">Add to Favorites</button>
+                </div>
+              </div>
+            `
+          })
+          .otherwise({
+            redirectTo: '/'
+          });
+      }])
+      .controller('WeatherController', ['$http', function($http) {
+        var vm = this;
+        vm.city = '';
+        vm.weatherData = null;
+        vm.error = '';
+        vm.favoriteCities = [];
+
+        vm.getWeather = function(city) {
+          var apiKey = 'bd5e378503939ddaee76f12ad7a97608'; // Replace with your API key
+          var apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city || vm.city}&appid=${apiKey}&units=metric`;
+
+          console.log('API URL:', apiUrl); // Log the API URL
+
+          $http.get(apiUrl)
+            .then(function(response) {
+              console.log('API Response:', response.data); // Log the response
+              vm.weatherData = response.data;
+              vm.error = '';
+            })
+            .catch(function(error) {
+              console.error('API Error:', error); // Log the error
+              vm.weatherData = null;
+              if (error.status === 404) {
+                vm.error = 'City not found. Please check the city name and try again.';
+              } else if (error.status === 401) {
+                vm.error = 'Invalid API key. Please check your API key.';
+              } else {
+                vm.error = 'An error occurred. Please try again later.';
+              }
+            });
+        };
+
+        vm.addToFavorites = function() {
+          if (vm.city && !vm.favoriteCities.includes(vm.city)) {
+            vm.favoriteCities.push(vm.city);
+          }
+        };
+
+        vm.removeFromFavorites = function(city) {
+          const index = vm.favoriteCities.indexOf(city);
+          if (index !== -1) {
+            vm.favoriteCities.splice(index, 1);
+          }
+        };
+      }]);
+  </script>
+</body>
+</html>
