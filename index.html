@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="financeApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Finance Tracker</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
+    <script src="app.js"></script>
+</head>
+<body>
+
+
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand" href="#">Finance Tracker</a>
+        <div class="navbar-nav ml-auto">
+            <a class="nav-item nav-link" href="#/dashboard">Dashboard</a>
+            <a class="nav-item nav-link" href="#/expenses">Expenses</a>
+            <a class="nav-item nav-link" href="#/income">Income</a>
+        </div>
+    </nav>
+
+
+        <!-- Home Page: Display GIF -->
+        <div class="text-center" ng-if="!$location.path()">
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYW53a2tkMXc5d2Q4YXJxMzJmN2FvN29qdDVkcmdlcjdmdjhrMnhhNyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/AlCr2wBq4ZC0MamQUz/giphy.gif" alt="Contact GIF" class="img-fluid">
+        </div>
+
+    <!-- Main Content -->
+    <div ng-view class="container mt-5"></div>
+
+</body>
+</html>

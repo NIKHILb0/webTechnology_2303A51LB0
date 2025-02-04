@@ -1,0 +1,22 @@
+<div class="container">
+    <h2>Income</h2>
+    <form ng-submit="addIncome()">
+        <div class="form-group">
+            <label for="incomeDescription">Income Description</label>
+            <input type="text" id="incomeDescription" ng-model="income.description" class="form-control" required placeholder="Income Description">
+        </div>
+        <div class="form-group">
+            <label for="incomeAmount">Amount</label>
+            <input type="number" id="incomeAmount" ng-model="income.amount" class="form-control" required placeholder="Amount">
+        </div>
+        <button type="submit" class="btn btn-primary">Add Income</button>
+    </form>
+
+    <h3 class="mt-4">Income List</h3>
+    <ul>
+        <li ng-repeat="income in incomeEntries">
+            {{ income.description }} - {{ income.amount | currency }}
+            <button ng-click="removeIncome($index)" class="btn btn-danger btn-sm float-right">Remove</button>
+        </li>
+    </ul>
+</div>
